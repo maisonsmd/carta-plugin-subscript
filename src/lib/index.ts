@@ -1,91 +1,81 @@
-import type { CartaExtension } from 'carta-md';
-import type { TokenizerAndRendererExtension } from 'marked';
+import type { Plugin as CartaPlugin } from 'carta-md';
+import remarkSupersub from 'remark-supersub';
 
 import SubscriptIcon from './icons/SubscriptIcon.svelte';
 import SupscriptIcon from './icons/SupscriptIcon.svelte';
 
-export const subscript = (): CartaExtension => {
+export const subscript = (): CartaPlugin => {
 	return {
-		markedExtensions: [
+		transformers: [
 			{
-				extensions: [subscriptTokenizerAndRenderer(), supercriptTokenizerAndRenderer()],
+				execution: 'sync',
+				type: 'remark',
+				transform: ({ processor }) => {
+					processor.use(remarkSupersub);
+				},
 			},
 		],
-		highlightRules: [
+		grammarRules: [
 			{
-				type: 'str',
-				match: /(?<!~)~[^~ ]+~(?!~)/g,
+				name: 'sub',
+				type: 'inline',
+				definition: {
+					match: '(?<!~)~[^~ ]+~(?!~)',
+					name: 'markup.sub.markdown',
+				},
 			},
 			{
-				type: 'str',
-				match: /(?<!\^)\^[^\^ ]+\^(?!\^)/g,
+				name: 'sup',
+				type: 'inline',
+				definition: {
+					match: '(?<!\\^)\\^[^\\^ ]+\\^(?!\\^)',
+					name: 'markup.sup.markdown',
+				},
+			},
+		],
+		highlightingRules: [
+			{
+				light: {
+					scope: 'markup.sub',
+					settings: {
+						foreground: '#1565C0',
+					},
+				},
+				dark: {
+					scope: 'markup.sub',
+					settings: {
+						foreground: '#42A5F5',
+					},
+				},
+			},
+			{
+				light: {
+					scope: 'markup.sup',
+					settings: {
+						foreground: '#1565C0',
+					},
+				},
+				dark: {
+					scope: 'markup.sup',
+					settings: {
+						foreground: '#42A5F5',
+					},
+				},
 			},
 		],
 		icons: [
 			{
 				id: 'subscript',
-				action: (input) => input.toggleSelectionSurrounding('~'),
 				label: 'Subscript',
+				action: (input) => input.toggleSelectionSurrounding('~'),
 				component: SubscriptIcon,
 			},
 			{
 				id: 'supscript',
-				action: (input) => input.toggleSelectionSurrounding('^'),
 				label: 'Supscript',
+				action: (input) => input.toggleSelectionSurrounding('^'),
 				component: SupscriptIcon,
 			},
 		],
 	};
 };
-
-function subscriptTokenizerAndRenderer(): TokenizerAndRendererExtension {
-	return {
-		name: 'sub',
-		level: 'inline',
-		start(src) {
-			return src.match(/(?<!~)~([^~ ]+)~(?!~)/)?.index;
-		},
-		tokenizer: (src) => {
-			const match = src.match(/^(?<!~)~([^~ ]+)~(?!~)/);
-
-			if (!match) {
-				return undefined;
-			}
-
-			return {
-				type: 'sub',
-				raw: match[0],
-				text: match[1].trim(),
-			};
-		},
-		renderer(token) {
-			return `<sub>${token.text}</sub>`;
-		},
-	};
-}
-
-function supercriptTokenizerAndRenderer(): TokenizerAndRendererExtension {
-	return {
-		name: 'super',
-		level: 'inline',
-		start(src) {
-			return src.match(/(?<!\^)\^([^\^ ]+)\^(?!\^)/)?.index;
-		},
-		tokenizer(src) {
-			const match = src.match(/^(?<!\^)\^([^\^ ]+)\^(?!\^)/);
-
-			if (!match) {
-				return undefined;
-			}
-
-			return {
-				type: 'super',
-				raw: match[0],
-				text: match[1].trim(),
-			};
-		},
-		renderer(token) {
-			return `<sup>${token.text}</sup>`;
-		},
-	};
-}

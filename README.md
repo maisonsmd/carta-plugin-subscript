@@ -4,6 +4,11 @@
 
 This plugin adds ability to render subscripts and superscripts to [Carta](https://github.com/BearToCode/carta).
 
+## New in v2
+
+- Support Carta v4
+- This plugin is now just a wrapper of [remark-supersub](https://www.npmjs.com/package/remark-supersub)
+
 ## Installation
 
 ```shell
@@ -21,6 +26,11 @@ npm i carta-plugin-subscript
 
 	const carta = new Carta({
 		extensions: [subscript()],
+		gfmOptions: {
+			// remark-gfm that Carta uses convert single tilde to strikethrough, disable that to use single tilde for subscript.
+			// see https://stackoverflow.com/a/78076200/7884074
+			singleTilde: false,
+		},
 	});
 </script>
 

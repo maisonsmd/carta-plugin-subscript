@@ -6,6 +6,10 @@
 
 	const carta = new Carta({
 		extensions: [subscript()],
+		gfmOptions: {
+			singleTilde: false,
+		},
+		sanitizer: false,
 	});
 
 	let value = `
@@ -36,6 +40,7 @@ In the 19^th^ century, the concentration of CO~2~ was 280 ppm.`;
 	:global(.carta-font-code, code) {
 		font-family: 'Fira Code', monospace;
 		font-variant-ligatures: normal;
+		font-size: 0.95rem;
 	}
 
 	:global(input, textarea, button) {
