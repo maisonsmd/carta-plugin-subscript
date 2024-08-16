@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Carta, CartaEditor } from 'carta-md';
+	import { Carta, MarkdownEditor } from 'carta-md';
 	import 'carta-md/default.css';
 
 	import { subscript } from '$lib';
@@ -27,7 +27,7 @@ In the 19^th^ century, the concentration of CO~2~ was 280 ppm.`;
 </svelte:head>
 
 <main>
-	<CartaEditor {carta} {value} />
+	<MarkdownEditor {carta} {value} />
 </main>
 
 <style>

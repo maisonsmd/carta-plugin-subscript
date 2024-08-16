@@ -21,7 +21,7 @@ npm i carta-plugin-subscript
 
 ```svelte
 <script>
-	import { Carta, CartaEditor } from 'carta-md';
+	import { Carta, MarkdownEditor } from 'carta-md';
 	import { subscript } from 'carta-plugin-subscript';
 
 	const carta = new Carta({
@@ -34,7 +34,7 @@ npm i carta-plugin-subscript
 	});
 </script>
 
-<CartaEditor {carta} />
+<MarkdownEditor {carta} />
 ```
 
 ## Usage
